@@ -80,10 +80,14 @@
 {
     id classRef = [self class];
     u_int listCount = 0;
-    bool  stop = NULL;
+    bool  stop = 0;//0x00
+    
     while (true) {
+        
         objc_property_t *propretyList = class_copyPropertyList(classRef, &listCount);
+        
         for (int i = 0; i < listCount; i++) {
+            
             objc_property_t proprety = propretyList[i];
             char const *propretyName = property_getName(proprety);
             NSString *name = [NSString stringWithCString:propretyName encoding:NSUTF8StringEncoding];
@@ -91,12 +95,16 @@
             if (stop) {
                 break;
             }
+            
         }
+        
         free(propretyList);
+        
         classRef = class_getSuperclass(classRef);
         if ([NSStringFromClass(classRef) isEqualToString:@"NSObject"]) {
             break;
         }
+        
     }
 }
 
@@ -118,12 +126,34 @@
     return self;
 }
 
+/**
+ *	类的描述
+ *
+ *	
+    @return
+    {
+        ClassName：....
+        Name : Value
+            .
+            .
+            .
+    }
+ 
+ */
 - (NSString *)description
 {
     NSMutableString *string = [[NSMutableString alloc] init];
+    
+    NSString *className = NSStringFromClass([self class]);
+    [string appendString:@"\n{\n"];
+    [string appendString:@"ClassName:"];
+    [string appendString:className];
+    
     [self classPropertListNameWithBlock:^(NSString *name, bool *stop) {
-        [string appendString:[NSString stringWithFormat:@"\nname:%@ -   value:%@",name, [self valueForKey:name]]];
+        [string appendString:[NSString stringWithFormat:@"\nname:%@  : value:%@",name, [self valueForKey:name]]];
     }];
+    
+    [string appendString:@"\n}\n"];
     
     return string;
 }

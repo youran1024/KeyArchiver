@@ -28,11 +28,11 @@
 }
 
 // is Class Entity is Same?
-
 - (BOOL)isSameWithObject:(id)obj
 {
     NSString *className1 = NSStringFromClass([self class]);
     NSString *className2 = NSStringFromClass([obj class]);
+    //如果两个类名不相同，则返回。
     if (![className1 isEqualToString:className2]) {
         return NO;
     }
@@ -59,6 +59,21 @@
         }];
     }
     return model;
+}
+
+- (NSDictionary *)encodeToDictionary
+{
+    NSMutableDictionary *mutDic = [NSMutableDictionary dictionary];
+    
+    [self classPropertListNameWithBlock:^(NSString *name, bool *stop) {
+        id value = [self valueForKey:name];
+        if (!value) {
+            value = @"";
+        }
+        [mutDic setValue:value forKey:name];
+    }];
+    
+    return mutDic;
 }
 
 - (void)classPropertListNameWithBlock:(void(^)(NSString *name, bool *stop))propretyBlock

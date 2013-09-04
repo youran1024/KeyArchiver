@@ -14,6 +14,11 @@
 - (void)dealloc
 {
     [self classDealloced];
+    
+    [self classPropertListNameWithBlock:^(NSString *name, bool *stop) {
+        [self valueForKey:name];
+    }];
+    
 }
 
 - (void)classDealloced
@@ -74,6 +79,16 @@
     }];
     
     return mutDic;
+}
+
+- (void)decodeFromDictionary:(NSDictionary *)dic
+{
+    NSArray *allKeys = [dic allKeys];
+    
+    for (NSString *key in allKeys) {
+        [self setValue:[dic objectForKey:key] forKey:key];
+    }
+    
 }
 
 - (void)classPropertListNameWithBlock:(void(^)(NSString *name, bool *stop))propretyBlock

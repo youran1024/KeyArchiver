@@ -17,6 +17,10 @@
     
     [self classPropertListNameWithBlock:^(NSString *name, bool *stop) {
         [self valueForKey:name];
+#warning if someOne can help me ??
+//        if someBody can tel me ,if i can do this , thank you
+//        [[self valueForKey:name] release];
+        
     }];
     
 }
